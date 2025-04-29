@@ -30,16 +30,16 @@ Section 2 - NPCs and Objects
 
 There is a blanket in the Rising path.
 
-A ware is a kind of thing. A ware has a number called the price.
-
-A hoe is a ware on the blanket. The price of a hoe is 40.
-
 The merchant is a man on the blanket.
+
+A ware is a kind of thing. A ware has a number called the price.
 
 The coin pouch is a thing. The coin pouch has a number called the balance. The balance of the coin pouch is usually 0.
 
 After printing the name of the coin pouch:
 	say " ([the balance of the coin pouch])".
+
+A hoe is a ware on the blanket. The price of a hoe is 40.
 
 Section 2 - Buying Things
 
@@ -62,8 +62,7 @@ Carry out buying a thing (called the ware):
 
 Report buying a thing (called the ware):
 	say "You buy [the ware].";
-	now the balance of the coin pouch is the balance of the coin pouch minus the price of the ware.
-
+	now the balance of the coin pouch is the balance of the coin pouch minus the price of the ware. 
 
 Instead of asking the merchant about "wares", say "I have wares if you have coin."
 
@@ -72,9 +71,6 @@ Section 2 - The Farm
 The Farm is west of the Rising Path. "The farm is small yet diverse with different crops and animals all around. There is much work for the sole farmer. A forest sprouts up to the south."
 
 The farmer is a man in the farm.
-
-After examining the farmer for the first time:
-	say "'Hey there! I could use some help around the farm if you'd like to work. Of course I will pay you,' says the farmer, continuing 'By the way, you wouldn't happen to have seen a hoe, have you? Mine broke and I really need another.'"
 
 Section 2 - Working at the Farm
 
@@ -105,41 +101,50 @@ Carry out working:
 
 Report working:
 	say "You work hard and earn one coin."
+	
+After examining the farmer for the first time:
+	say "'Hey there! I could use some help around the farm if you'd like to work. Of course I will pay you,' says the farmer, continuing 'By the way, you wouldn't happen to have seen a hoe, have you? Mine broke and I really need another.'"
 
 Section 2 - Quest Progress
 
-A quest progress is a kind of value. The quest progresses are unstarted, started, and finished. A quest progress is usually unstarted.
-
 Section 2 - The Hoe Quest
 
-The hoe quest is initially unstarted.
+The hoe quest is a scene.
 
-Instead of asking the farmer about "hoe" when the hoe quest is unstarted:
+The hoe quest begins when asking the farmer about "hoe". The hoe quest ends when giving the hoe to the farmer.
+
+Report asking the farmer about "hoe":
 	say "'I can give you some gold to go buy it for me. Here.' He gives you some gold.";
-	now the hoe quest is started;
+	increase the balance of the coin pouch by the price of the hoe;
+	rule succeeds. [without this it prints "There is no reply."]
+
+When the hoe quest begins:
 	if the player does not carry the coin pouch:
 		say "The farmer notices you don't have a coin pouch and gives you one.";
-		now the player carries the coin pouch;
-	now the balance of the coin pouch is the balance of the coin pouch plus the price of the hoe.
+		now the player carries the coin pouch.
+
+When the hoe quest ends:
+	increase the balance of the coin pouch by 20.
 
 The block giving rule is not listed in the check giving it to rules.
 
-Check giving something to the farmer:
-	if not giving the hoe to the farmer:
+Check giving something (called the thing) to the farmer:
+	if the thing is not the hoe:
 		follow the block giving rule instead.
 	
 Report giving the hoe to the farmer:
-	say "You give the farmer the hoe. He thanks you and gives you 20 coins. 'I really owe you one,' he says.";
-	now the hoe quest is finished;
-	now the balance of the coin pouch is the balance of the coin pouch plus 20.
+	say "You give the farmer the hoe. He thanks you and gives you 20 coins. 'I really owe you one,' he says."
 
 Section 2 - The Fertilizer
 
 Some fertilizer is a thing.
 
-Instead of asking the farmer about "fertilizer" when the hoe quest is finished:
-	say "The farmer gives you some fertilizer. 'You've helped me out plenty. I'm happy to return the favor.'";
+Carry out asking the farmer about "fertilizer" when the hoe quest is not happening:
 	now the player carries some fertilizer.
+
+Report asking the farmer about "fertilizer" when the hoe quest is not happening:
+	say "The farmer gives you some fertilizer. 'You've helped me out plenty. I'm happy to return the favor.'";
+	rule succeeds.
 
 Section 2 - The Forest
 
@@ -157,28 +162,30 @@ After examining the Dragon Tree for the first time:
 
 Section 2 - The Fertilizer Quest
 
-The fertilizer quest is initially unstarted.
+The fertilizer quest is a scene. The fertilizer quest begins when asking the spirit about "tree". The fertilizer quest ends when giving the fertilizer to the spirit.
 	
-Instead of asking the spirit about "tree" when the fertilizer quest is unstarted:
+Report asking the spirit about "tree" when the fertilizer quest is not happening:
 	say "'The tree needs food. The soil has been sapped of its nutrients. We have little to offer, but we can do our best to give you whatever you seek if you help us.'";
-	now the fertilizer quest is started.
+	rule succeeds.
 
-Check giving something to the spirit:
-	if not giving the fertilizer to the spirit:
+Check giving something (called the thing) to the spirit:
+	if the thing is not fertilizer:
 		follow the block giving rule instead.
 		
 Report giving the fertilizer to the spirit:
-	say "You give the spirit the fertilizer. 'Thank you. This will help the tree thrive. Is there anything I give to you?'";
-	now the fertilizer quest is finished.
+	say "You give the spirit the fertilizer. 'Thank you. This will help the tree thrive. Is there anything I give to you?'".
 
 Section 2 - The Dragon Tree Sap
 
 Some Dragon Tree sap is a spell component.
 	
-After asking the spirit about "sap" when the fertilizer quest is finished:
-	say "'Very well. Take some of the Dragon Tree's sap.'";
+Carry out asking the spirit about "sap" when the fertilizer quest has ended:
 	now the player carries the sap.
-	
+
+Report asking the player about "sap" when the fertilizer quest has ended:
+	say "'Very well. Take some of the Dragon Tree's sap.'";
+	rule succeeds.
+
 Section 3 - Down The Upstream Path
 
 The Upstream Path is north of the Glade.
@@ -199,4 +206,4 @@ Some quicksilver is a spell component.
 
 Section 6 - Fetched
 
-[Every turn when the player is in the Glade: if all spell components are off-stage, say "You have consumed the spell components and are ready to cast! The place is here, the time is now. You realize that laying upon the table will complete the spell, so you step on up."; now the player is on the Stone Table; say "You feel a dark energy surge through you. You see a shadowy form floating above you. You realize that this apparition is you — or rather, your 'fetch'.[paragraph break]You can feel the contents of your stomach roiling in agony; you slowly lose consciousness."; end the story.]
+Every turn when the player is in the Glade: if all spell components are off-stage, say "You have consumed the spell components and are ready to cast! The place is here, the time is now. You realize that laying upon the table will complete the spell, so you step on up."; now the player is on the Stone Table; say "You feel a dark energy surge through you. You see a shadowy form floating above you. You realize that this apparition is you — or rather, your 'fetch'.[paragraph break]You can feel the contents of your stomach roiling in agony; you slowly lose consciousness."; end the story.
